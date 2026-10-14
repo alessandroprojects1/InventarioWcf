@@ -12,17 +12,17 @@ namespace InventarioWcf
     [ServiceContract]
     public interface IService1
     {
+        [OperationContract]
+        sp_ObtenerProductoPorId_Result ObtenerProductoId(int id);
 
         [OperationContract]
-        string GetData(int value);
+        string InsertarProducto(string nombre, string descripcion, decimal precio, int stock, int categoria_id, string url_imagen);
 
+        [OperationContract]
+        string ActualizarProducto(int id, string nombre, string descripcion, decimal precio, int stock, int categoria_id, string url_imagen);
 
-        
-
-
+        [OperationContract]
+        string EliminarProducto(int id);
     }
-
-
-    
   
 }

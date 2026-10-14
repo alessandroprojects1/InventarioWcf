@@ -126,7 +126,7 @@
             <Parameter Name="url_imagen" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_EliminarProducto">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_InsertarProducto">
             <Parameter Name="nombre" Mode="In" Type="String" />
@@ -207,7 +207,7 @@
     </Connection>
     <Options>
       <DesignerInfoPropertySet>
-        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="ValidateOnBuild" Value="True" />
         <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
