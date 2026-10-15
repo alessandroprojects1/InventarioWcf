@@ -1,82 +1,107 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Text;
 
-namespace InventarioWcf
+namespace InventarioWcf // (O el namespace exacto que tenga tu proyecto)
 {
-    // NOTA: puede usar el comando "Rename" del menú "Refactorizar" para cambiar el nombre de clase "Service1" en el código, en svc y en el archivo de configuración.
-    // NOTE: para iniciar el Cliente de prueba WCF para probar este servicio, seleccione Service1.svc o Service1.svc.cs en el Explorador de soluciones e inicie la depuración.
     public class Service1 : IService1
     {
+        // Instancia de tu contexto de base de datos / Entity Framework
+        // Reemplázalo por el nombre de tu contexto si es diferente (ej. BDInventarioEntities)
+        private Model1 db = new Model1(); 
 
+        public string InsertarProducto(Producto producto)
+        {
+            // Validación de campos requeridos
+            if (string.IsNullOrEmpty(producto.Nombre) || string.IsNullOrEmpty(producto.Categoria))
+            {
+                return "Error: Todos los campos obligatorios deben estar llenos.";
+            }
 
-        public sp_ObtenerProductoPorId_Result ObtenerProductoId(int id) {
+            // Validación de valores positivos para precio y stock
+            if (producto.Precio <= 0 || producto.Stock < 0)
+            {
+                return "Error: El precio debe ser mayor a 0 y el stock no puede ser negativo.";
+            }
 
-            using (var db = new InventarioDBEntities()) {
-
-
-                var productoSP = db.sp_ObtenerProductoPorId(id).FirstOrDefault();
-                
-                return productoSP;
-                
+            try
+            {
+                db.Producto.Add(producto);
+                db.SaveChanges();
+                return "Éxito: Producto insertado correctamente.";
+            }
+            catch (Exception ex)
+            {
+                return "Error al insertar: " + ex.Message;
             }
         }
 
-        public string InsertarProducto(string nombre, string descripcion, decimal precio, int stock, int categoria_id, string url_imagen) {
+        public string ActualizarProducto(Producto producto)
+        {
+            // Validación de existencia por ID
+            var prodExistente = db.Producto.Find(producto.Id);
+            if (prodExistente == null)
+            {
+                return "Error: No se puede actualizar. El producto no existe.";
+            }
 
-            using (var db = new InventarioDBEntities()) {
+            // Validación de campos requeridos
+            if (string.IsNullOrEmpty(producto.Nombre))
+            {
+                return "Error: El nombre del producto es obligatorio.";
+            }
 
-                var producto = db.sp_InsertarProducto(nombre,descripcion,precio, stock, categoria_id, url_imagen);
+            // Validación de valores positivos
+            if (producto.Precio <= 0 || producto.Stock < 0)
+            {
+                return "Error: El precio y el stock deben ser valores válidos (positivos).";
+            }
 
-                if (producto > 0) {
-                    return "Producto agregado con exito";
-                }
-                else {
+            try
+            {
+                prodExistente.Nombre = producto.Nombre;
+                prodExistente.Precio = producto.Precio;
+                prodExistente.Stock = producto.Stock;
+                prodExistente.Categoria = producto.Categoria;
 
-                    return "Error en el registro del producto";
-                }
+                db.SaveChanges();
+                return "Éxito: Producto actualizado correctamente.";
+            }
+            catch (Exception ex)
+            {
+                return "Error al actualizar: " + ex.Message;
             }
         }
 
-
-        public string ActualizarProducto(int id, string nombre, string descripcion, decimal precio, int stock, int categoria_id, string url_imagen) {
-
-            using (var db = new InventarioDBEntities()) {
-
-                var producto = db.sp_ActualizarProducto(id, nombre, descripcion, precio, stock, categoria_id, url_imagen);
-
-                if (producto > 0)
-                {
-                    return "Se actualizo el producto con éxito";
-                }
-                else {
-                    return "No se pudo actualizar el producto";
-                }
-            }
-
+        public Producto ObtenerProductoId(int id)
+        {
+            // SELECT: Buscar producto por ID (devuelve null si no existe)
+            var producto = db.Producto.Find(id);
+            return producto; 
         }
 
+        public string EliminarProducto(int id)
+        {
+            // Validación de existencia antes de eliminar
+            var producto = db.Producto.Find(id);
+            if (producto == null)
+            {
+                return "Error: No se puede eliminar. El producto con el ID especificado no existe.";
+            }
 
-        public string EliminarProducto(int id) {
-
-            using (var db = new InventarioDBEntities()) {
-
-
-                var producto = db.sp_EliminarProducto(id);
-
-                if (producto > 0) {
-                    return "El producto se elimino correctamente";
-                }
-                else {
-                    return "No se pudo eliminar el producto";
-                }
+            try
+            {
+                db.Producto.Remove(producto);
+                db.SaveChanges();
+                return "Éxito: El producto se eliminó correctamente.";
+            }
+            catch (Exception ex)
+            {
+                return "Error al eliminar: " + ex.Message;
             }
         }
-
-      
     }
 }
