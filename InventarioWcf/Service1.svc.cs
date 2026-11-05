@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Transactions;   // Requiere la referencia System.Transactions (ver paso 4)
 
-namespace InventarioWcf
+namespace InventarioWcf // (O el namespace exacto que tenga tu proyecto)
 {
     public class Service1 : IService1
     {
