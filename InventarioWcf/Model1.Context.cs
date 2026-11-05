@@ -29,6 +29,10 @@ namespace InventarioWcf
     
         public virtual DbSet<Categorias> Categorias { get; set; }
         public virtual DbSet<Productos> Productos { get; set; }
+        public virtual DbSet<DetalleDevolucion> DetalleDevolucion { get; set; }
+        public virtual DbSet<DetalleVenta> DetalleVenta { get; set; }
+        public virtual DbSet<Devolucion> Devolucion { get; set; }
+        public virtual DbSet<Ventas> Ventas { get; set; }
     
         public virtual ObjectResult<sp_ObtenerProductoPorId_Result> sp_ObtenerProductoPorId(Nullable<int> id)
         {
@@ -108,6 +112,15 @@ namespace InventarioWcf
                 new ObjectParameter("url_imagen", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_InsertarProducto", nombreParameter, descripcionParameter, precioParameter, stockParameter, categoria_idParameter, url_imagenParameter);
+        }
+    
+        public virtual ObjectResult<sp_ConsultarPendientesDevolucion_Result> sp_ConsultarPendientesDevolucion(Nullable<int> idVenta)
+        {
+            var idVentaParameter = idVenta.HasValue ?
+                new ObjectParameter("IdVenta", idVenta) :
+                new ObjectParameter("IdVenta", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_ConsultarPendientesDevolucion_Result>("sp_ConsultarPendientesDevolucion", idVentaParameter);
         }
     }
 }

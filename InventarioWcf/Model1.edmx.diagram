@@ -4,10 +4,19 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6b69ea18277e4383a75f553e75d30342" Name="Diagram1">
+      <Diagram DiagramId="6b69ea18277e4383a75f553e75d30342" Name="Diagram1" ZoomLevel="62">
         <EntityTypeShape EntityType="InventarioDBModel.Categorias" Width="1.5" PointX="0.625" PointY="1.625" IsExpanded="true" />
         <EntityTypeShape EntityType="InventarioDBModel.Productos" Width="1.625" PointX="3" PointY="1" IsExpanded="true" />
         <AssociationConnector Association="InventarioDBModel.FK_Productos_Categorias" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="InventarioDBModel.DetalleDevolucion" Width="1.5" PointX="8.5" PointY="4.75" />
+        <EntityTypeShape EntityType="InventarioDBModel.DetalleVenta" Width="1.5" PointX="7.875" PointY="1.25" />
+        <EntityTypeShape EntityType="InventarioDBModel.Devolucion" Width="1.5" PointX="5.625" PointY="7.5" />
+        <EntityTypeShape EntityType="InventarioDBModel.Ventas" Width="1.5" PointX="5.25" PointY="3.5" />
+        <AssociationConnector Association="InventarioDBModel.FK_DetalleDevolucion_Devolucion" />
+        <AssociationConnector Association="InventarioDBModel.FK_DetalleDevolucion_Productos" />
+        <AssociationConnector Association="InventarioDBModel.FK_DetalleVenta_Productos" />
+        <AssociationConnector Association="InventarioDBModel.FK_DetalleVenta_Ventas" />
+        <AssociationConnector Association="InventarioDBModel.FK_Devolucion_Ventas" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
