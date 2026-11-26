@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/InventarioWcf" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/InventarioWcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="sp_ObtenerProductoPorId_Result">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="categoria_descripcion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="categoria_id" type="xs:int" />
+      <xs:element minOccurs="0" name="categoria_nombre" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="descripcion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="id" type="xs:int" />
+      <xs:element minOccurs="0" name="nombre" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="precio" type="xs:decimal" />
+      <xs:element minOccurs="0" name="stock" type="xs:int" />
+      <xs:element minOccurs="0" name="url_imagen" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="sp_ObtenerProductoPorId_Result" nillable="true" type="tns:sp_ObtenerProductoPorId_Result" />
+  <xs:complexType name="DevolucionRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Detalles" nillable="true" type="tns:ArrayOfDetalleDevolucionRequest" />
+      <xs:element minOccurs="0" name="IdVenta" type="xs:int" />
+      <xs:element minOccurs="0" name="MotivoDevolucion" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DevolucionRequest" nillable="true" type="tns:DevolucionRequest" />
+  <xs:complexType name="ArrayOfDetalleDevolucionRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DetalleDevolucionRequest" nillable="true" type="tns:DetalleDevolucionRequest" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDetalleDevolucionRequest" nillable="true" type="tns:ArrayOfDetalleDevolucionRequest" />
+  <xs:complexType name="DetalleDevolucionRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Cantidad" type="xs:int" />
+      <xs:element minOccurs="0" name="IdProducto" type="xs:int" />
+      <xs:element minOccurs="0" name="ProductoDefectuoso" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DetalleDevolucionRequest" nillable="true" type="tns:DetalleDevolucionRequest" />
+  <xs:complexType name="DevolucionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Exito" type="xs:boolean" />
+      <xs:element minOccurs="0" name="IdDevolucion" type="xs:int" />
+      <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MontoTotalDevuelto" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TipoDevolucion" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DevolucionResponse" nillable="true" type="tns:DevolucionResponse" />
+  <xs:complexType name="ArrayOfsp_ConsultarPendientesDevolucion_Result">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="sp_ConsultarPendientesDevolucion_Result" nillable="true" type="tns:sp_ConsultarPendientesDevolucion_Result" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfsp_ConsultarPendientesDevolucion_Result" nillable="true" type="tns:ArrayOfsp_ConsultarPendientesDevolucion_Result" />
+  <xs:complexType name="sp_ConsultarPendientesDevolucion_Result">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CantidadDevuelta" type="xs:int" />
+      <xs:element minOccurs="0" name="CantidadPendiente" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="CantidadVendida" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="IdProducto" type="xs:int" />
+      <xs:element minOccurs="0" name="NombreProducto" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PrecioVenta" nillable="true" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="sp_ConsultarPendientesDevolucion_Result" nillable="true" type="tns:sp_ConsultarPendientesDevolucion_Result" />
+  <xs:complexType name="ArrayOfDevolucionListado">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DevolucionListado" nillable="true" type="tns:DevolucionListado" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDevolucionListado" nillable="true" type="tns:ArrayOfDevolucionListado" />
+  <xs:complexType name="DevolucionListado">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="IdVenta" type="xs:int" />
+      <xs:element minOccurs="0" name="MontoTotalDevuelto" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MotivoDevolucion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TipoDevolucion" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DevolucionListado" nillable="true" type="tns:DevolucionListado" />
+  <xs:complexType name="ArrayOfDevolucionDetalleItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DevolucionDetalleItem" nillable="true" type="tns:DevolucionDetalleItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDevolucionDetalleItem" nillable="true" type="tns:ArrayOfDevolucionDetalleItem" />
+  <xs:complexType name="DevolucionDetalleItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Cantidad" type="xs:int" />
+      <xs:element minOccurs="0" name="IdProducto" type="xs:int" />
+      <xs:element minOccurs="0" name="NombreProducto" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PrecioVenta" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Subtotal" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DevolucionDetalleItem" nillable="true" type="tns:DevolucionDetalleItem" />
+</xs:schema>

@@ -1,0 +1,45 @@
+﻿@model InventarioMvc.ServiceReference1.DevolucionDetalleItem[]
+@{
+    ViewBag.Title = "Detalle de devolución";
+}
+
+<h2 class="mt-4 mb-3">Detalle de la devolución N° @ViewBag.IdDevolucion</h2>
+
+@if (Model == null || Model.Length == 0)
+{
+    <div class="alert alert-warning">La devolución no existe o no tiene productos registrados.</div>
+}
+else
+{
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Id</th>
+                <th>Producto</th>
+                <th class="text-end">Precio de venta</th>
+                <th class="text-end">Cantidad</th>
+                <th class="text-end">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdProducto</td>
+                    <td>@item.NombreProducto</td>
+                    <td class="text-end">S/ @item.PrecioVenta.ToString("N2")</td>
+                    <td class="text-end">@item.Cantidad</td>
+                    <td class="text-end">S/ @item.Subtotal.ToString("N2")</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4" class="text-end">Total devuelto</th>
+                <th class="text-end">S/ @Model.Sum(x => x.Subtotal).ToString("N2")</th>
+            </tr>
+        </tfoot>
+    </table>
+}
+
+@Html.ActionLink("← Volver al listado", "Index", null, new { @class = "btn btn-secondary" })

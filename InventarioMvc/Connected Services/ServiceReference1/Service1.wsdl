@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="Service1" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:55894/Service1.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:55894/Service1.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:55894/Service1.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/InventarioWcf" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IService1_ObtenerProductoId_InputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerProductoId" />
+  </wsdl:message>
+  <wsdl:message name="IService1_ObtenerProductoId_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerProductoIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_InsertarProducto_InputMessage">
+    <wsdl:part name="parameters" element="tns:InsertarProducto" />
+  </wsdl:message>
+  <wsdl:message name="IService1_InsertarProducto_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InsertarProductoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_ActualizarProducto_InputMessage">
+    <wsdl:part name="parameters" element="tns:ActualizarProducto" />
+  </wsdl:message>
+  <wsdl:message name="IService1_ActualizarProducto_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ActualizarProductoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_EliminarProducto_InputMessage">
+    <wsdl:part name="parameters" element="tns:EliminarProducto" />
+  </wsdl:message>
+  <wsdl:message name="IService1_EliminarProducto_OutputMessage">
+    <wsdl:part name="parameters" element="tns:EliminarProductoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_RegistrarDevolucionVenta_InputMessage">
+    <wsdl:part name="parameters" element="tns:RegistrarDevolucionVenta" />
+  </wsdl:message>
+  <wsdl:message name="IService1_RegistrarDevolucionVenta_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RegistrarDevolucionVentaResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_ConsultarPendientesDevolucion_InputMessage">
+    <wsdl:part name="parameters" element="tns:ConsultarPendientesDevolucion" />
+  </wsdl:message>
+  <wsdl:message name="IService1_ConsultarPendientesDevolucion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConsultarPendientesDevolucionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_ListarDevoluciones_InputMessage">
+    <wsdl:part name="parameters" element="tns:ListarDevoluciones" />
+  </wsdl:message>
+  <wsdl:message name="IService1_ListarDevoluciones_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ListarDevolucionesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_VerDevolucionDetalle_InputMessage">
+    <wsdl:part name="parameters" element="tns:VerDevolucionDetalle" />
+  </wsdl:message>
+  <wsdl:message name="IService1_VerDevolucionDetalle_OutputMessage">
+    <wsdl:part name="parameters" element="tns:VerDevolucionDetalleResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IService1">
+    <wsdl:operation name="ObtenerProductoId">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/ObtenerProductoId" message="tns:IService1_ObtenerProductoId_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/ObtenerProductoIdResponse" message="tns:IService1_ObtenerProductoId_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InsertarProducto">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/InsertarProducto" message="tns:IService1_InsertarProducto_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/InsertarProductoResponse" message="tns:IService1_InsertarProducto_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ActualizarProducto">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/ActualizarProducto" message="tns:IService1_ActualizarProducto_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/ActualizarProductoResponse" message="tns:IService1_ActualizarProducto_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="EliminarProducto">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/EliminarProducto" message="tns:IService1_EliminarProducto_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/EliminarProductoResponse" message="tns:IService1_EliminarProducto_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RegistrarDevolucionVenta">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/RegistrarDevolucionVenta" message="tns:IService1_RegistrarDevolucionVenta_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/RegistrarDevolucionVentaResponse" message="tns:IService1_RegistrarDevolucionVenta_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarPendientesDevolucion">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/ConsultarPendientesDevolucion" message="tns:IService1_ConsultarPendientesDevolucion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/ConsultarPendientesDevolucionResponse" message="tns:IService1_ConsultarPendientesDevolucion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ListarDevoluciones">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/ListarDevoluciones" message="tns:IService1_ListarDevoluciones_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/ListarDevolucionesResponse" message="tns:IService1_ListarDevoluciones_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="VerDevolucionDetalle">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/VerDevolucionDetalle" message="tns:IService1_VerDevolucionDetalle_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/VerDevolucionDetalleResponse" message="tns:IService1_VerDevolucionDetalle_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IService1" type="tns:IService1">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ObtenerProductoId">
+      <soap:operation soapAction="http://tempuri.org/IService1/ObtenerProductoId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InsertarProducto">
+      <soap:operation soapAction="http://tempuri.org/IService1/InsertarProducto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ActualizarProducto">
+      <soap:operation soapAction="http://tempuri.org/IService1/ActualizarProducto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EliminarProducto">
+      <soap:operation soapAction="http://tempuri.org/IService1/EliminarProducto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegistrarDevolucionVenta">
+      <soap:operation soapAction="http://tempuri.org/IService1/RegistrarDevolucionVenta" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarPendientesDevolucion">
+      <soap:operation soapAction="http://tempuri.org/IService1/ConsultarPendientesDevolucion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListarDevoluciones">
+      <soap:operation soapAction="http://tempuri.org/IService1/ListarDevoluciones" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerDevolucionDetalle">
+      <soap:operation soapAction="http://tempuri.org/IService1/VerDevolucionDetalle" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service1">
+    <wsdl:port name="BasicHttpBinding_IService1" binding="tns:BasicHttpBinding_IService1">
+      <soap:address location="http://localhost:55894/Service1.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

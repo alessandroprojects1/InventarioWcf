@@ -1,0 +1,338 @@
+﻿@{
+    ViewBag.Title = "Nueva devolución";
+}
+
+<h2 class="mt-4 mb-3">Registrar devolución</h2>
+
+<div id="alerta"></div>
+
+<!-- 1. Venta y motivo -->
+<div class="card mb-4">
+    <div class="card-header fw-bold">Datos de la devolución</div>
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label for="idVenta" class="form-label">Id de la venta</label>
+                <input type="number" id="idVenta" class="form-control" min="1" placeholder="Ej. 1" />
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="btnBuscar" class="btn btn-outline-primary w-100" onclick="buscarVenta()">Buscar venta</button>
+            </div>
+            <div class="col-md-7">
+                <label for="motivo" class="form-label">Motivo de la devolución</label>
+                <input type="text" id="motivo" class="form-control" maxlength="250" placeholder="Ej. Producto no deseado" />
+            </div>
+        </div>
+
+        <div id="seccionVenta" class="mt-4" style="display:none">
+            <h6 class="fw-bold">Productos de la venta N° <span id="lblVenta"></span></h6>
+            <table class="table table-sm table-bordered align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-end">Precio de venta</th>
+                        <th class="text-end">Cantidad vendida</th>
+                        <th class="text-end">Ya devuelta</th>
+                        <th class="text-end">Disponible para devolver</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaVenta"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Detalle de devolución (carrito) -->
+<div class="card mb-4">
+    <div class="card-header fw-bold">Detalle de devolución</div>
+    <div class="card-body">
+        <div class="row g-3 align-items-end mb-3">
+            <div class="col-md-5">
+                <label for="producto" class="form-label">Producto</label>
+                <select id="producto" class="form-select" disabled>
+                    <option value="">-- Primero busque una venta --</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="cantidad" class="form-label">Cantidad a devolver</label>
+                <input type="number" id="cantidad" class="form-control" min="1" value="1" />
+            </div>
+            <div class="col-md-3">
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="defectuoso" />
+                    <label class="form-check-label" for="defectuoso">Producto defectuoso (no vuelve al stock)</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="btnAgregar" class="btn btn-primary w-100" onclick="agregarProducto()" disabled>+ Agregar</button>
+            </div>
+        </div>
+
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Producto</th>
+                    <th class="text-end">Precio</th>
+                    <th class="text-end">Cantidad a devolver</th>
+                    <th class="text-end">Subtotal</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tablaDetalle">
+                <tr><td colspan="6" class="text-center text-muted">No hay productos agregados.</td></tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-end">
+            <div class="alert alert-primary py-2 mb-0 fw-bold">Total devolución: S/ <span id="lblTotal">0.00</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex gap-2 mb-4">
+    <button type="button" id="btnRegistrar" class="btn btn-success" onclick="registrarDevolucion()" disabled>Registrar devolución</button>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+</div>
+
+@section scripts {
+    <script>
+        var urlProductos = '@Url.Action("ProductosVenta", "Devoluciones")';
+        var urlRegistrar = '@Url.Action("Registrar", "Devoluciones")';
+        var urlIndex = '@Url.Action("Index", "Devoluciones")';
+
+        var ventaActual = null;   // Id de la venta buscada
+        var productosVenta = [];  // productos de la venta (vendido, devuelto, pendiente)
+        var detalle = [];         // productos agregados a la devolución
+
+        function escapar(texto) {
+            return $('<div>').text(texto).html();
+        }
+
+        function mostrarAlerta(tipo, mensaje) {
+            $('#alerta').html(
+                '<div class="alert alert-' + tipo + ' alert-dismissible fade show" role="alert">' +
+                escapar(mensaje) +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>');
+            window.scrollTo(0, 0);
+        }
+
+        function formato(numero) {
+            return Number(numero).toFixed(2);
+        }
+
+        // Limpia la venta y el detalle (cuando se busca otra venta)
+        function limpiarVenta() {
+            ventaActual = null;
+            productosVenta = [];
+            detalle = [];
+            $('#seccionVenta').hide();
+            $('#tablaVenta').empty();
+            $('#producto').html('<option value="">-- Primero busque una venta --</option>').prop('disabled', true);
+            $('#btnAgregar').prop('disabled', true);
+            mostrarDetalle();
+        }
+
+        // 1. Busca la venta y trae sus productos desde el servicio WCF
+        function buscarVenta() {
+            var idVenta = parseInt($('#idVenta').val(), 10);
+            limpiarVenta();
+            $('#alerta').empty();
+
+            if (!idVenta || idVenta <= 0) {
+                mostrarAlerta('warning', 'Ingrese un Id de venta válido.');
+                return;
+            }
+
+            $.getJSON(urlProductos, { idVenta: idVenta })
+                .done(function (r) {
+                    if (!r.exito) {
+                        mostrarAlerta('danger', r.mensaje);
+                        return;
+                    }
+                    ventaActual = idVenta;
+                    productosVenta = r.productos;
+                    mostrarProductosVenta();
+                })
+                .fail(function () {
+                    mostrarAlerta('danger', 'Error al consultar los productos de la venta.');
+                });
+        }
+
+        // Muestra los productos de la venta y llena el selector con los que aún se pueden devolver
+        function mostrarProductosVenta() {
+            $('#lblVenta').text(ventaActual);
+            var filas = '';
+            var opciones = '<option value="">-- Seleccione un producto --</option>';
+            var hayDisponibles = false;
+
+            productosVenta.forEach(function (p) {
+                filas += '<tr>' +
+                    '<td>' + escapar(p.nombre) + '</td>' +
+                    '<td class="text-end">S/ ' + formato(p.precio) + '</td>' +
+                    '<td class="text-end">' + p.vendida + '</td>' +
+                    '<td class="text-end">' + p.devuelta + '</td>' +
+                    '<td class="text-end fw-bold">' + p.pendiente + '</td>' +
+                    '</tr>';
+                if (p.pendiente > 0) {
+                    hayDisponibles = true;
+                    opciones += '<option value="' + p.idProducto + '">' + escapar(p.nombre) +
+                        ' (disponible: ' + p.pendiente + ')</option>';
+                }
+            });
+
+            $('#tablaVenta').html(filas);
+            $('#seccionVenta').show();
+
+            if (hayDisponibles) {
+                $('#producto').html(opciones).prop('disabled', false);
+                $('#btnAgregar').prop('disabled', false);
+            } else {
+                mostrarAlerta('info', 'La venta ' + ventaActual + ' ya fue devuelta en su totalidad.');
+            }
+        }
+
+        // 2. Agrega el producto seleccionado al detalle, respetando lo disponible
+        function agregarProducto() {
+            var idProducto = parseInt($('#producto').val(), 10);
+            var cantidad = parseInt($('#cantidad').val(), 10);
+            var defectuoso = $('#defectuoso').is(':checked');
+
+            if (!ventaActual) {
+                mostrarAlerta('warning', 'Primero busque una venta.');
+                return;
+            }
+            if (!idProducto) {
+                mostrarAlerta('warning', 'Seleccione un producto.');
+                return;
+            }
+            if (!cantidad || cantidad <= 0) {
+                mostrarAlerta('warning', 'La cantidad a devolver debe ser mayor que cero.');
+                return;
+            }
+
+            var producto = productosVenta.find(function (p) { return p.idProducto === idProducto; });
+            var existente = detalle.find(function (d) { return d.idProducto === idProducto; });
+            var cantidadTotal = cantidad + (existente ? existente.cantidad : 0);
+
+            if (cantidadTotal > producto.pendiente) {
+                mostrarAlerta('warning', 'No puede devolver ' + cantidadTotal + ' unidades de "' + producto.nombre +
+                    '". Solo hay ' + producto.pendiente + ' disponibles para devolución.');
+                return;
+            }
+
+            if (existente) {
+                existente.cantidad = cantidadTotal;
+                existente.defectuoso = defectuoso;
+            } else {
+                detalle.push({
+                    idProducto: idProducto,
+                    nombre: producto.nombre,
+                    precio: producto.precio,
+                    cantidad: cantidad,
+                    defectuoso: defectuoso
+                });
+            }
+
+            $('#alerta').empty();
+            $('#cantidad').val(1);
+            $('#defectuoso').prop('checked', false);
+            mostrarDetalle();
+        }
+
+        // Dibuja la tabla del detalle y el total
+        function mostrarDetalle() {
+            if (detalle.length === 0) {
+                $('#tablaDetalle').html('<tr><td colspan="6" class="text-center text-muted">No hay productos agregados.</td></tr>');
+                $('#lblTotal').text('0.00');
+                $('#btnRegistrar').prop('disabled', true);
+                return;
+            }
+
+            var filas = '';
+            var total = 0;
+            detalle.forEach(function (d, i) {
+                var subtotal = d.precio * d.cantidad;
+                total += subtotal;
+                filas += '<tr>' +
+                    '<td>' + escapar(d.nombre) + '</td>' +
+                    '<td class="text-end">S/ ' + formato(d.precio) + '</td>' +
+                    '<td class="text-end">' + d.cantidad + '</td>' +
+                    '<td class="text-end">S/ ' + formato(subtotal) + '</td>' +
+                    '<td>' + (d.defectuoso
+                        ? '<span class="badge bg-danger">Defectuoso</span>'
+                        : '<span class="badge bg-success">Reingresa al stock</span>') + '</td>' +
+                    '<td><button type="button" class="btn btn-sm btn-danger" onclick="eliminarProducto(' + i + ')">Eliminar</button></td>' +
+                    '</tr>';
+            });
+
+            $('#tablaDetalle').html(filas);
+            $('#lblTotal').text(formato(total));
+            $('#btnRegistrar').prop('disabled', false);
+        }
+
+        function eliminarProducto(indice) {
+            detalle.splice(indice, 1);
+            mostrarDetalle();
+        }
+
+        // 3. Envía la devolución al controlador, que consume RegistrarDevolucionVenta del WCF
+        function registrarDevolucion() {
+            var motivo = $('#motivo').val().trim();
+
+            if (!ventaActual) {
+                mostrarAlerta('warning', 'Primero busque una venta.');
+                return;
+            }
+            if (motivo === '') {
+                mostrarAlerta('warning', 'Ingrese el motivo de la devolución.');
+                return;
+            }
+            if (detalle.length === 0) {
+                mostrarAlerta('warning', 'Agregue al menos un producto al detalle de la devolución.');
+                return;
+            }
+
+            var datos = {
+                IdVenta: ventaActual,
+                MotivoDevolucion: motivo,
+                Detalles: detalle.map(function (d) {
+                    return { IdProducto: d.idProducto, Cantidad: d.cantidad, ProductoDefectuoso: d.defectuoso };
+                })
+            };
+
+            $('#btnRegistrar').prop('disabled', true);
+
+            $.ajax({
+                url: urlRegistrar,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(datos)
+            })
+                .done(function (r) {
+                    if (r.exito) {
+                        mostrarAlerta('success', r.mensaje + ' Volviendo al listado...');
+                        setTimeout(function () { window.location.href = urlIndex; }, 1500);
+                    } else {
+                        mostrarAlerta('danger', r.mensaje);
+                        $('#btnRegistrar').prop('disabled', false);
+                    }
+                })
+                .fail(function () {
+                    mostrarAlerta('danger', 'Error de comunicación con el servidor al registrar la devolución.');
+                    $('#btnRegistrar').prop('disabled', false);
+                });
+        }
+
+        // Si cambia el Id de la venta, se limpia lo anterior
+        $('#idVenta').on('change', function () {
+            if (ventaActual !== null && parseInt($(this).val(), 10) !== ventaActual) {
+                limpiarVenta();
+            }
+        });
+        $('#idVenta').on('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); buscarVenta(); }
+        });
+    </script>
+}
