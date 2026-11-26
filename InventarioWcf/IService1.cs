@@ -31,6 +31,14 @@ namespace InventarioWcf
         // Usa el SP sp_ConsultarPendientesDevolucion (apoyo para las pruebas)
         [OperationContract]
         List<sp_ConsultarPendientesDevolucion_Result> ConsultarPendientesDevolucion(int idVenta);
+
+        // ===== Proyecto final: consulta de devoluciones =====
+        [OperationContract]
+        List<DevolucionListado> ListarDevoluciones();
+
+
+        [OperationContract]
+        List<DevolucionDetalleItem> VerDevolucionDetalle(int idDevolucion);
     }
 
     // ---------------------------------------------------------------------
@@ -83,4 +91,27 @@ namespace InventarioWcf
         [DataMember]
         public string Mensaje { get; set; }
     }
+
+    [DataContract]
+    public class DevolucionListado
+    {
+        [DataMember] public int Id { get; set; }
+        [DataMember] public DateTime Fecha { get; set; }
+        [DataMember] public int IdVenta { get; set; }
+        [DataMember] public string MotivoDevolucion { get; set; }
+        [DataMember] public string TipoDevolucion { get; set; }
+        [DataMember] public decimal MontoTotalDevuelto { get; set; }
+    }
+
+    [DataContract]
+    public class DevolucionDetalleItem
+    {
+        [DataMember] public int IdProducto { get; set; }
+        [DataMember] public string NombreProducto { get; set; }
+        [DataMember] public int Cantidad { get; set; }
+        [DataMember] public decimal PrecioVenta { get; set; }
+        [DataMember] public decimal Subtotal { get; set; }
+    }
+
+
 }

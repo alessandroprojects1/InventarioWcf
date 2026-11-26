@@ -281,6 +281,47 @@ namespace InventarioWcf // (O el namespace exacto que tenga tu proyecto)
         }
 
         // =================================================================
+        // PROYECTO FINAL: CONSULTA DE DEVOLUCIONES
+        // =================================================================
+
+        public List<DevolucionListado> ListarDevoluciones()
+        {
+            using (var db = new InventarioDBEntities())
+            {
+                return db.Devolucion
+                    .OrderByDescending(d => d.Id)
+                    .Select(d => new DevolucionListado
+                    {
+                        Id = d.Id,
+                        Fecha = d.Fecha,
+                        IdVenta = d.IdVenta,
+                        MotivoDevolucion = d.MotivoDevolucion,
+                        TipoDevolucion = d.TipoDevolucion,
+                        MontoTotalDevuelto = d.MontoTotalDevuelto
+                    })
+                    .ToList();
+            }
+        }
+        public List<DevolucionDetalleItem> VerDevolucionDetalle(int idDevolucion)
+        {
+            using (var db = new InventarioDBEntities())
+            {
+                return (from dd in db.DetalleDevolucion
+                        join p in db.Productos on dd.IdProducto equals p.id
+                        where dd.IdDevolucion == idDevolucion
+                        select new DevolucionDetalleItem
+                        {
+                            IdProducto = dd.IdProducto,
+                            NombreProducto = p.nombre,
+                            Cantidad = dd.Cantidad,
+                            PrecioVenta = dd.PrecioVenta,
+                            Subtotal = dd.Cantidad * dd.PrecioVenta
+                        })
+                        .ToList();
+            }
+        }
+
+        // =================================================================
         // Métodos de apoyo
         // =================================================================
 
